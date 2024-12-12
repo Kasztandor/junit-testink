@@ -17,8 +17,9 @@ class TestStudentManagement(unittest.TestCase):
         students = ["John Doe", "Jane Doe"]
         export_students(file_path, students)
         mock_file.assert_called_once_with(file_path, mode='w', newline='')
-        mock_file().write.assert_any_call("John Doe\n")
-        mock_file().write.assert_any_call("Jane Doe\n")
+        mock_file().write.assert_has_calls([unittest.mock.call("John Doe\r\n"), unittest.mock.call("Jane Doe\r\n")])
+        mock_file().write.assert_any_call("John Doe\r\n")
+        mock_file().write.assert_any_call("Jane Doe\r\n")
 
     def test_add_student(self):
         students = ["John Doe"]
@@ -45,5 +46,11 @@ class TestStudentManagement(unittest.TestCase):
         self.assertEqual(attendance, {"John Doe": True, "Jane Doe": False})
         mock_check_attendance.assert_called_once_with(students)
 
+def run_tests():
+    runner = unittest.TextTestRunner()
+    result = runner.run(unittest.makeSuite(TestStudentManagement))
+    print(f"{result.testsRun}/{len(result.errors)+len(result.failures)+result.testsRun} tests correct")
+
 if __name__ == "__main__":
-    unittest.main()
+    run_tests()
+
