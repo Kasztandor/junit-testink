@@ -56,16 +56,6 @@ jobs:
       run: |
         python -c "from main import manage_attendance_data; print(manage_attendance_data(['John Doe', 'Jane Doe']))"
 
-    - name: Create Issues with TODO
-      uses: todo/todo-action@v1
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        annotations: true
-        exclude: 'node_modules/**, vendor/**'
-        include: '**/*.py'
-        create-issue: true
-        labels: 'todo'
-
     - name: SuperLint formatting (optional)
       uses: super-linter/super-linter@v4
       with:
