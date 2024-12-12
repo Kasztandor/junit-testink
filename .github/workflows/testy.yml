@@ -31,12 +31,3 @@ jobs:
         coverage run -m unittest discover -s ./ -p 'test_*.py'
         coverage report -m
 
-    - name: Create Issues with TODO
-      uses: todo/todo-action@v1
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        annotations: true
-        exclude: 'node_modules/**, vendor/**'
-        include: '**/*.py'
-        create-issue: true
-        labels: 'todo'
