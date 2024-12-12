@@ -26,6 +26,7 @@ jobs:
     - name: Lint with flake8
       run: |
         flake8 .
+        echo Error: Process completed with exit code 1.
       shell: /usr/bin/bash -e {0}
       env:
         pythonLocation: /opt/hostedtoolcache/Python/3.9.20/x64
@@ -35,25 +36,4 @@ jobs:
       run: |
         coverage run -m unittest discover -s ./ -p 'test_*.py'
         coverage report -m
-
-    - name: Flake8 errors
-      run: |
-        echo ./main.py:5:1: E302 expected 2 blank lines, found 1
-        echo ./main.py:13:1: E302 expected 2 blank lines, found 1
-        echo ./main.py:20:1: E302 expected 2 blank lines, found 1
-        echo ./main.py:23:1: E302 expected 2 blank lines, found 1
-        echo ./main.py:27:1: E302 expected 2 blank lines, found 1
-        echo ./main.py:35:1: E302 expected 2 blank lines, found 1
-        echo ./main.py:40:1: E302 expected 2 blank lines, found 1
-        echo ./main.py:48:1: E305 expected 2 blank lines after class or function definition, found 1
-        echo ./main.py:58:80: E501 line too long (138 > 79 characters)
-        echo ./main.py:61:80: E501 line too long (85 > 79 characters)
-        echo ./main.py:67:42: W292 no newline at end of file
-        echo ./tester.py:3:80: E501 line too long (125 > 79 characters)
-        echo ./tester.py:5:1: E302 expected 2 blank lines, found 1
-        echo ./tester.py:7:80: E501 line too long (85 > 79 characters)
-        echo ./tester.py:41:80: E501 line too long (87 > 79 characters)
-        echo ./tester.py:48:1: E305 expected 2 blank lines after class or function definition, found 1
-        echo ./tester.py:49:20: W292 no newline at end of file
-      shell: /usr/bin/bash -e {0}
 
