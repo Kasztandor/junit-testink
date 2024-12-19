@@ -56,7 +56,6 @@ jobs:
         uses: super-linter/super-linter/slim@v7.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_PYTHON_RUFF: true
           CACHE_DIR: .cache/super-linter
 
   todo-to-issue:
@@ -76,8 +75,9 @@ jobs:
       - name: Commit and Push Changes
         run: |
           git add -A
-          if [[ `git status --porcelain` ]]; then
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
             git commit -m "Automatically added GitHub issue links to TODOs"
             git push origin main
-          else
-            echo "No changes to commit"
+          fi
