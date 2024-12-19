@@ -1,44 +1,49 @@
-import pytest
+import unittest
 from unittest.mock import patch, mock_open
 from main import import_students, export_students, add_student, update_student_file, check_attendance, manage_attendance_data
 
-def test_import_students():
-    with patch("builtins.open", new_callable=mock_open, read_data="John Doe\nJane Doe\n") as mock_file:
+class TestStudentManagement(unittest.TestCase):
+
+    @patch("builtins.open", new_callable=mock_open, read_data="John Doe\nJane Doe\n")
+    def test_import_students(self, mock_file):
         file_path = "students.csv"
         students = import_students(file_path)
         mock_file.assert_called_once_with(file_path, mode='r', newline='')
-        assert students == ["John Doe", "Jane Doe"]
+        self.assertEqual(students, ["John Doe", "Jane Doe"])
 
-def test_export_students():
-    with patch("builtins.open", new_callable=mock_open) as mock_file:
+    @patch("builtins.open", new_callable=mock_open)
+    def test_export_students(self, mock_file):
         file_path = "students.csv"
         students = ["John Doe", "Jane Doe"]
         export_students(file_path, students)
         mock_file.assert_called_once_with(file_path, mode='w', newline='')
-        mock_file().write.assert_has_calls([pytest.mock.call("John Doe\r\n"), pytest.mock.call("Jane Doe\r\n")])
+        mock_file().write.assert_any_call("John Doe\n")
+        mock_file().write.assert_any_call("Jane Doe\n")
 
-def test_add_student():
-    students = ["John Doe"]
-    add_student(students, "Jane Doe")
-    assert "Jane Doe" in students
+    def test_add_student(self):
+        students = ["John Doe"]
+        add_student(students, "Jane Doe")
+        self.assertIn("Jane Doe", students)
 
-def test_update_student_file():
-    with patch("main.export_students") as mock_export_students:
+    @patch("main.export_students")
+    def test_update_student_file(self, mock_export_students):
         file_path = "students.csv"
         students = ["John Doe", "Jane Doe"]
         update_student_file(file_path, students)
         mock_export_students.assert_called_once_with(file_path, students)
 
-def test_check_attendance():
-    with patch("builtins.input", side_effect=["y", "n"]) as mock_input:
+    @patch("builtins.input", side_effect=["y", "n"])
+    def test_check_attendance(self, mock_input):
         students = ["John Doe", "Jane Doe"]
         attendance = check_attendance(students)
-        assert attendance == {"John Doe": True, "Jane Doe": False}
+        self.assertEqual(attendance, {"John Doe": True, "Jane Doe": False})
 
-def test_manage_attendance_data():
-    with patch("main.check_attendance", return_value={"John Doe": True, "Jane Doe": False}) as mock_check_attendance:
+    @patch("main.check_attendance", return_value={"John Doe": True, "Jane Doe": False})
+    def test_manage_attendance_data(self, mock_check_attendance):
         students = ["John Doe", "Jane Doe"]
         attendance = manage_attendance_data(students)
-        assert attendance == {"John Doe": True, "Jane Doe": False}
+        self.assertEqual(attendance, {"John Doe": True, "Jane Doe": False})
         mock_check_attendance.assert_called_once_with(students)
 
+if __name__ == "__main__":
+    unittest.main()

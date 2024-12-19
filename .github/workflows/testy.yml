@@ -1,4 +1,4 @@
-name: Unit Tests with Coverage
+name: Unit Tests
 
 on:
   push:
@@ -8,8 +8,7 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
+permissions: read-all
 
 jobs:
   test:
@@ -33,10 +32,8 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov  # Ensure test dependencies are installed
       - name: "Run tests with coverage"
-        run: pytest -vv --cov=tester
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+        run: pytest -vv --cov=src 
+  
   lint:
     needs: test
     runs-on: "ubuntu-latest"
@@ -70,14 +67,9 @@ jobs:
           CACHE_DIR: .cache/super-linter
 
   todo-to-issue:
-    needs: test
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v4"
       - name: "TODO to Issue"
         uses: "alstr/todo-to-issue-action@v5"
         with:
-          INSERT_ISSUE_URLS: "true"
-          CLOSE_ISSUES: "true"
-          AUTO_ASSIGN: "true"
-
