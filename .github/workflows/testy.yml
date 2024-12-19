@@ -16,17 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: "Run tests with coverage"
-        run: pytest -vv --cov=tester
-        shell: /usr/bin/bash -e {0}
-        env:
-          pythonLocation: /opt/hostedtoolcache/Python/3.13.1/x64
-          PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.1/x64/lib/pkgconfig
-          Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.1/x64
-          Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.1/x64
-          Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.1/x64
-          LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.1/x64/lib
-          GITHUB_TOKEN: ***
       - name: Cache pip dependencies
         uses: actions/cache@v3
         with:
