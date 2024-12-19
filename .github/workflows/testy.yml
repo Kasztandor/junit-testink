@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Unit Tests with Coverage
 
 on:
   push:
@@ -8,7 +8,8 @@ on:
     branches:
       - main
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -32,7 +33,9 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov  # Ensure test dependencies are installed
       - name: "Run tests with coverage"
-        run: pytest -vv --cov=tester 
+        run: pytest -vv --cov=tester
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   lint:
     needs: test
@@ -67,6 +70,7 @@ jobs:
           CACHE_DIR: .cache/super-linter
 
   todo-to-issue:
+    needs: test
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v4"
@@ -76,16 +80,4 @@ jobs:
           INSERT_ISSUE_URLS: "true"
           CLOSE_ISSUES: "true"
           AUTO_ASSIGN: "true"
-      - name: Set Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      - name: Commit and Push Changes
-        run: |
-          git add -A
-          if [[ git status --porcelain ]]; then
-            git commit -m "Automatically added GitHub issue links to TODOs"
-            git push origin main
-          else
-            echo "No changes to commit"
-          fi
+
